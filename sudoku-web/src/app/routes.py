@@ -12,8 +12,8 @@ def index():
 def game():
     if request.method == 'POST':
         puzzle = request.json.get('puzzle')
-        solver = SudokuSolver()
-        solution = solver.solve(puzzle)
+        solver = SudokuSolver(puzzle)
+        solution = solver.solve()
         return jsonify(solution=solution)
     return render_template('game.html')
 

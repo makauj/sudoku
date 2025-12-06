@@ -4,7 +4,7 @@ from app.sudoku.solver import SudokuSolver
 class TestSudokuSolver(unittest.TestCase):
 
     def setUp(self):
-        self.solver = SudokuSolver()
+        self.solver = SudokuSolver(board=[[0]*9 for _ in range(9)])
 
     def test_solve_valid_puzzle(self):
         puzzle = [
@@ -19,6 +19,7 @@ class TestSudokuSolver(unittest.TestCase):
             [0, 0, 0, 0, 8, 0, 0, 7, 9]
         ]
         solution = self.solver.solve(puzzle)
+        self.assertIsNotNone(solution)
         self.assertTrue(self.solver.is_valid_solution(solution))
 
     def test_solve_invalid_puzzle(self):

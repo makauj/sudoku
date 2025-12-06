@@ -1,10 +1,14 @@
 def validate_board(board):
-    # Check if the board is a valid Sudoku board
+    # Basic shape/type checks
+    if not isinstance(board, list) or len(board) != 9:
+        return False
     for row in board:
-        if len(row) != 9 or not all(isinstance(num, int) and 0 <= num <= 9 for num in row):
+        if not isinstance(row, list) or len(row) != 9:
+            return False
+        if not all(isinstance(num, int) and 0 <= num <= 9 for num in row):
             return False
 
-    # Check rows, columns, and 3x3 squares for duplicates
+    # Check rows, columns, and 3x3 squares for duplicates (only track non-zero values)
     for i in range(9):
         row_nums = set()
         col_nums = set()
@@ -12,22 +16,27 @@ def validate_board(board):
 
         for j in range(9):
             # Validate rows
-            if board[i][j] != 0 and board[i][j] in row_nums:
-                return False
-            row_nums.add(board[i][j])
+            r_val = board[i][j]
+            if r_val != 0:
+                if r_val in row_nums:
+                    return False
+                row_nums.add(r_val)
 
             # Validate columns
-            if board[j][i] != 0 and board[j][i] in col_nums:
-                return False
-            col_nums.add(board[j][i])
+            c_val = board[j][i]
+            if c_val != 0:
+                if c_val in col_nums:
+                    return False
+                col_nums.add(c_val)
 
             # Validate 3x3 squares
             square_row = 3 * (i // 3)
             square_col = 3 * (i % 3)
-            if board[square_row + j // 3][square_col + j % 3] != 0:
-                if board[square_row + j // 3][square_col + j % 3] in square_nums:
+            s_val = board[square_row + j // 3][square_col + j % 3]
+            if s_val != 0:
+                if s_val in square_nums:
                     return False
-                square_nums.add(board[square_row + j // 3][square_col + j % 3])
+                square_nums.add(s_val)
 
     return True
 
