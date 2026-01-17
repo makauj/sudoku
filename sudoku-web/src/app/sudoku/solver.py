@@ -233,3 +233,19 @@ class SudokuSolver:
     def from_puzzle_string(puzzle_string: str) -> 'SudokuSolver':
         board = [[int(puzzle_string[i * 9 + j]) if puzzle_string[i * 9 + j] != '.' else 0 for j in range(9)] for i in range(9)]
         return SudokuSolver(board)
+    
+    @staticmethod
+    def get_hint(puzzle: Grid) -> Optional[Tuple[int, int, int]]:
+        """
+        Given a puzzle, return a hint as (row, col, num) for an empty cell,
+        or None if no hint is available (e.g., puzzle is already complete or unsolvable).
+        """
+        solver = SudokuSolver(puzzle)
+        loc = solver.find_empty()
+        if loc is None:
+            return None
+        r, c = loc
+        for v in range(1, 10):
+            if solver.is_valid(r, c, v):
+                return (r, c, v)
+        return None

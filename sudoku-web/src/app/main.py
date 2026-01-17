@@ -1,15 +1,17 @@
 from flask import Flask
-import routes as main_routes
+from .routes import bp as routes_bp
+import os
 
 def create_app():
-    app = Flask(__name__)
-    
-    app.register_blueprint(main_routes)
-
+    print("TEMPLATE FOLDER:", os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/templates')))
+    app = Flask(__name__, template_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/templates')))
+    app.register_blueprint(routes_bp)
     return app
 
 # module-level `app` is the WSGI entrypoint used by gunicorn: `gunicorn src.app.main:app`
 app = create_app()
+
+
 
 if __name__ == "__main__":
     # dev runner (only for local dev)

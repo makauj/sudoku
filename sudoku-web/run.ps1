@@ -21,5 +21,24 @@ if ($null -ne $waitress) {
   & waitress-serve --listen=127.0.0.1:8000 src.app.main:app
 } else {
   Write-Host "waitress not found; running Flask dev server (not for production)."
-  python src/app/main.py
+  $env:FLASK_ENV = "development"
+
+  # Change to the src directory to ensure 'app' is treated as a package
+  Push-Location "src"
+
+  # Try to use waitress if available, otherwise fallback to Flask dev server
+  try {
+    python -m waitress --help > $null 2>&1
+    $waitressAvailable = $true
+  } catch {
+    $waitressAvailable = $false
+  }
+
+  if ($waitressAvailable) {
+    python -m waitress --listen=0.0.0.0:5000 app.main
+  } else {
+    python -m app.main
+  }
+
+  Pop-Location
 }
